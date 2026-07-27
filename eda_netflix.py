@@ -124,3 +124,115 @@ plt.xlabel("Country")
 plt.ylabel("Number of Shows")
 plt.xticks(rotation=45)
 plt.show()
+
+# ===============DIRECTOR & DURATION ANALYSIS==================
+
+print("\n" + "="*60)
+print("DIRECTOR & DURATION ANALYSIS")
+print("="*60)
+
+# Create a copy of movie data
+movies = df[df["type"] == "Movie"].copy()
+
+# Convert duration from text to numeric
+movies["duration"] = movies["duration"].str.replace(" min", "", regex=False)
+movies["duration"] = pd.to_numeric(movies["duration"], errors="coerce")
+
+# -------------------------------------------------
+# 1. Top Directors by Number of Movies
+# -------------------------------------------------
+
+print("\nTop 10 Directors by Number of Movies")
+top_directors = movies["director"].value_counts().head(10)
+print(top_directors)
+
+plt.figure(figsize=(10,5))
+top_directors.plot(kind="bar")
+plt.title("Top 10 Directors by Number of Movies")
+plt.xlabel("Director")
+plt.ylabel("Number of Movies")
+plt.xticks(rotation=45)
+plt.show()
+
+
+# -------------------------------------------------
+# 2. Directors with Highest Average Movie Duration
+# -------------------------------------------------
+
+print("\nTop Directors by Average Movie Duration")
+
+director_avg = (
+    movies.groupby("director")["duration"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print(director_avg)
+
+plt.figure(figsize=(10,5))
+director_avg.plot(kind="bar")
+plt.title("Top Directors by Average Movie Duration")
+plt.xlabel("Director")
+plt.ylabel("Average Duration (Minutes)")
+plt.xticks(rotation=45)
+plt.show()
+
+
+# -------------------------------------------------
+# 3. Directors with Highest Maximum Movie Duration
+# -------------------------------------------------
+
+print("\nDirectors with Highest Maximum Movie Duration")
+
+director_max = (
+    movies.groupby("director")["duration"]
+    .max()
+    .sort_values(ascending=False)
+    .head(10)
+)
+
+print(director_max)
+
+plt.figure(figsize=(10,5))
+director_max.plot(kind="bar")
+plt.title("Directors with Highest Maximum Movie Duration")
+plt.xlabel("Director")
+plt.ylabel("Maximum Duration (Minutes)")
+plt.xticks(rotation=45)
+plt.show()
+
+
+# -------------------------------------------------
+# 4. Top 10 Longest Movies
+# -------------------------------------------------
+
+print("\nTop 10 Longest Movies")
+
+longest_movies = movies.sort_values(
+    by="duration",
+    ascending=False
+)[["title", "director", "duration"]].head(10)
+
+print(longest_movies)
+
+
+# -------------------------------------------------
+# 5. Directors with Most Movies Longer Than 120 Minutes
+# -------------------------------------------------
+
+print("\nDirectors with Most Movies Longer Than 120 Minutes")
+
+long_movies = movies[movies["duration"] > 120]
+
+director_long = long_movies["director"].value_counts().head(10)
+
+print(director_long)
+
+plt.figure(figsize=(10,5))
+director_long.plot(kind="bar")
+plt.title("Directors with Most Movies Longer Than 120 Minutes")
+plt.xlabel("Director")
+plt.ylabel("Number of Movies")
+plt.xticks(rotation=45)
+plt.show()
