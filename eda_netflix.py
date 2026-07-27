@@ -138,9 +138,7 @@ movies = df[df["type"] == "Movie"].copy()
 movies["duration"] = movies["duration"].str.replace(" min", "", regex=False)
 movies["duration"] = pd.to_numeric(movies["duration"], errors="coerce")
 
-# -------------------------------------------------
 # 1. Top Directors by Number of Movies
-# -------------------------------------------------
 
 print("\nTop 10 Directors by Number of Movies")
 top_directors = movies["director"].value_counts().head(10)
@@ -154,10 +152,7 @@ plt.ylabel("Number of Movies")
 plt.xticks(rotation=45)
 plt.show()
 
-
-# -------------------------------------------------
 # 2. Directors with Highest Average Movie Duration
-# -------------------------------------------------
 
 print("\nTop Directors by Average Movie Duration")
 
@@ -178,10 +173,7 @@ plt.ylabel("Average Duration (Minutes)")
 plt.xticks(rotation=45)
 plt.show()
 
-
-# -------------------------------------------------
 # 3. Directors with Highest Maximum Movie Duration
-# -------------------------------------------------
 
 print("\nDirectors with Highest Maximum Movie Duration")
 
@@ -202,10 +194,7 @@ plt.ylabel("Maximum Duration (Minutes)")
 plt.xticks(rotation=45)
 plt.show()
 
-
-# -------------------------------------------------
 # 4. Top 10 Longest Movies
-# -------------------------------------------------
 
 print("\nTop 10 Longest Movies")
 
@@ -216,10 +205,7 @@ longest_movies = movies.sort_values(
 
 print(longest_movies)
 
-
-# -------------------------------------------------
 # 5. Directors with Most Movies Longer Than 120 Minutes
-# -------------------------------------------------
 
 print("\nDirectors with Most Movies Longer Than 120 Minutes")
 
@@ -236,3 +222,79 @@ plt.xlabel("Director")
 plt.ylabel("Number of Movies")
 plt.xticks(rotation=45)
 plt.show()
+
+
+
+#==================TOP 5 COMPARISON ANALYSIS=====================
+
+
+print("\n" + "=" * 60)
+print("TOP 5 COMPARISON ANALYSIS")
+print("=" * 60)
+
+# 1. Top 10 Actors by Number of Titles
+
+print("\n1. Top 10 Actors by Number of Titles")
+top_actors = (
+    df["cast"]
+    .dropna()
+    .str.split(", ")
+    .explode()
+    .value_counts()
+    .head(10)
+)
+
+print(top_actors)
+
+# 2. Rating vs Content Type
+
+print("\n2. Rating vs Content Type")
+rating_vs_type = pd.crosstab(df["rating"], df["type"])
+
+print(rating_vs_type)
+
+# 3. Number of Titles Added Each Year
+
+print("\n3. Number of Titles Added Each Year")
+
+df["date_added"] = pd.to_datetime(df["date_added"], errors="coerce")
+
+titles_added = (
+    df["date_added"]
+    .dt.year
+    .value_counts()
+    .sort_index()
+)
+
+print(titles_added)
+
+# 4. Average Movie Duration by Rating
+
+print("\n4. Average Movie Duration by Rating")
+
+movies = df[df["type"] == "Movie"].copy()
+
+movies["duration"] = movies["duration"].str.replace(" min", "", regex=False)
+movies["duration"] = pd.to_numeric(movies["duration"], errors="coerce")
+
+avg_duration = (
+    movies.groupby("rating")["duration"]
+    .mean()
+    .sort_values(ascending=False)
+)
+
+print(avg_duration)
+
+# 5. Country vs Number of Movies
+
+print("\n5. Top 10 Countries by Number of Movies")
+
+country_movies = (
+    movies["country"]
+    .value_counts()
+    .head(10)
+)
+
+print(country_movies)
+
+print("\nAdditional Comparison Analysis Completed Successfully!")
